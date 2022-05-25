@@ -1,0 +1,1 @@
+Here's the method, with which you can get a token for RPC: https://github.com/MarshalX/yandex-music-api/discussions/513#discussioncomment-2729781
