@@ -1,7 +1,7 @@
 import pypresence
 from yandex_music import Client
 import configparser
-
+client_id = '978995592736944188'
 
 def get_track():
     try:
@@ -37,7 +37,7 @@ def get_link():
         track = get_track()
         return f"https://music.yandex.ru/album/{track['albums'][0]['id']}/track/{track['id']}/"
     except Exception as e:
-        return 'https://vk.com/'
+        return 'https://music.yandex.ru/'
 
 
 config = configparser.ConfigParser()
@@ -52,7 +52,6 @@ else:
 TOKEN = config.get('token', 'token')
 
 client = Client(TOKEN).init()
-client_id = '978995592736944188'
 curr = get_label()
 
 RPC = pypresence.Presence(client_id)
