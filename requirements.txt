@@ -1,0 +1,2 @@
+pypresence==4.2.0
+yandex_music==2.0.1
