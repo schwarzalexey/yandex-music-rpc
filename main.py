@@ -50,12 +50,11 @@ class Presence:
             print("[YandexMusicRPC] -> Discord is not launched")
             return
 
-        self.currentTrack = self.getTrack()
         self.rpc = pypresence.Presence(client_id)
         self.rpc.connect()
         self.client = Client(self.token).init()
-
         self.running = True
+        self.currentTrack = None
         while self.running:
             if "Discord.exe" not in (p.name() for p in psutil.process_iter()):
                 print("[YandexMusicRPC] -> Discord was closed")
@@ -83,11 +82,8 @@ class Presence:
     def getTrack(self) -> dict:
         try:
             queues = self.client.queues_list()
-            print(queues)
             last_queue = self.client.queue(queues[0].id)
-            print(last_queue)
             track_id = last_queue.get_current_track()
-            print(track_id)
             track = track_id.fetch_track()
             return {
                 'success': True,
