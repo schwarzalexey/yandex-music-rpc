@@ -67,15 +67,15 @@ class Presence:
                         details=ongoing_track['label'],
                         state=ongoing_track['duration'],
                         large_image=ongoing_track['og-image'],
-                        large_text='Y.M',
+                        large_text='github.com/schwarzalexey/yandex-music-rpc',
                         buttons=[{'label': 'Go to the track', 'url': ongoing_track['link']}]
                     )
                 else:
                     self.rpc.update(
                         details=ongoing_track['label'],
                         state=ongoing_track['duration'],
-                        large_image=ongoing_track['og_image'],
-                        large_text='Y.M'
+                        large_image=ongoing_track['og-image'],
+                        large_text='github.com/schwarzalexey/yandex-music-rpc'
                     )
                 self.currentTrack = ongoing_track
             time.sleep(10)
@@ -83,34 +83,29 @@ class Presence:
     def getTrack(self) -> dict:
         try:
             queues = self.client.queues_list()
+            print(queues)
             last_queue = self.client.queue(queues[0].id)
+            print(last_queue)
             track_id = last_queue.get_current_track()
+            print(track_id)
             track = track_id.fetch_track()
-        except AttributeError:
             return {
-                'success': False,
-                'label': "No track",
-                'duration': "Duration: None",
-                'link': "",
-                'og-image': "og-image"
+                'success': True,
+                'label': f"{', '.join(track.artists_name())} - {track.title}",
+                'duration': f'Duration: {0 if track.duration_ms // 60000 < 10 else ""}{track.duration_ms // 60000}'
+                            f':{0 if track.duration_ms % 60000 // 1000 < 10 else ""}{track.duration_ms % 60000 // 1000}',
+                'link': f"https://music.yandex.ru/album/{track['albums'][0]['id']}/track/{track['id']}/",
+                'og-image': "https://" + track.og_image[:-2] + "400x400"
             }
         except Exception as exception:
             print(f"[YandexMusicRPC] -> Something happened: {exception}")
             return {
                 'success': False,
-                'label': "No track",
+                'label': "No track / Uploaded track",
                 'duration': "Duration: None",
                 'link': "",
                 'og-image': "og-image"
             }
-        return {
-            'success': True,
-            'label': f"{', '.join(track.artists_name())} - {track.title}",
-            'duration': f'Duration: {0 if track.duration_ms // 60000 < 10 else ""}{track.duration_ms // 60000}'
-                        f':{0 if track.duration_ms % 60000 // 1000 < 10 else ""}{track.duration_ms % 60000 // 1000}',
-            'link': f"https://music.yandex.ru/album/{track['albums'][0]['id']}/track/{track['id']}/",
-            'og-image': "https://" + track.og_image[:-2] + "400x400"
-        }
 
 
 if __name__ == "__main__":
